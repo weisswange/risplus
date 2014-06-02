@@ -1,0 +1,18 @@
+#form-sidebar {
+    margin-bottom: 30px;
+    border:1px solid #dddddd;
+    padding:10px;
+}
+
+p.lead {
+    padding:10px;
+}
+
+p.bg-success {
+    margin-top: 30px;
+}
+
+#bigteaser {
+    border:1px solid #dddddd;
+    padding:10px;
+}

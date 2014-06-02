@@ -1,0 +1,98 @@
+<div class="col-md-9">
+	{if $search_error_input_empty == 'has-error'}
+        {literal}
+        <script>
+            $(document ).ready(function() {
+                $( "#errormessage" ).effect('shake', {direction: "ltr", times: 4, distance: 5}, 1000);
+            });
+        </script>
+		<p class="text-danger" id="errormessage">Bitte ein Wort oder eine Wortgruppe in das Suchfeld eingeben</p>
+        {/literal}
+	{/if}
+	<form role="form" action="" method="post">
+		<div class="form-group {$search_error_input_empty}">
+			<input name="s" type="text" class="form-control input-lg" id="s" placeholder="Wort oder Wortgruppe" {if $search_input_s != ""}value="{$search_input_s}"{/if} />
+	  	</div>
+		<div class="checkbox">
+		  <label>
+		    <input type="checkbox" value="true" {if $filter_remove_einladungen == true}checked="checked"{/if} name="filter_remove_einladungen" />
+		    Einladungen ausschließen
+		  </label>
+		</div>
+        <div class="checkbox">
+      		  <label>
+      		    <input type="checkbox" value="true" {if $filter_reduce_niederschriften == true}checked="checked"{/if} name="filter_reduce_niederschriften" />
+      		    Nur Niederschriften anzeigen
+      		  </label>
+      		</div>
+		<input type="submit" class="btn btn-block btn-primary btn-sm" value="Start" />
+	</form>
+</div>
+
+<div class="col-md-3" id="bigteaser">
+	<p class="lead">Recherche in Dokumenten des Ratsinformationssystems der Stadt Halle</p>
+    <a class="btn btn-default btn-block" href="v.php">In Vorlagen suchen</a>
+</div>
+
+{if $search_results_count > 0}
+<div class="col-md-12">
+	<p class="lead bg-success">
+		{if $search_results_count == 1}
+		Es wurde {$search_results_count} Dokument gefunden.
+		{else}
+		Es wurden {$search_results_count} Dokumente gefunden.
+		{/if}
+	</p>
+	<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Datei</th>
+				</tr>
+			</thead>
+			<tbody>
+			{foreach from=$search_results_data item=dataset}
+				<tr>
+					<td>
+						{literal}
+						<script type='text/javascript'>
+							$(document).ready(function() 
+							{
+								$('#myModal{/literal}{$dataset.id}{literal}').on('show.bs.modal', function (e) 
+								{
+									$('a#modal-body-{/literal}{$dataset.id}{literal}').media({width:850, height:650});
+								});
+							});
+						</script>
+						{/literal}
+                        <p class="text-muted">{$dataset.filename}</p>
+						<button class="btn btn-default" data-toggle="modal" data-target="#myModal{$dataset.id}" title="{$dataset.filename}">Dokument ansehen</button>
+						<div class="modal fade bs-example-modal-lg" id="myModal{$dataset.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					        <div class="modal-dialog modal-lg">
+					            <div class="modal-content">
+					                <div class="modal-header">
+					                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					                    <h4 class="modal-title" id="myModalLabel">{$dataset.filename}</h4>
+					                </div>
+                                    <div class="modal-body">
+					                    <a id="modal-body-{$dataset.id}" class="media" href="/downloads/{$dataset.filename}"></a>
+							            <a href="/downloads/{$dataset.filename}">Download der Datei</a>
+					                </div>
+					                <div class="modal-footer">
+					                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+					                </div>
+					            </div>
+					        </div>
+					    </div>
+				    	<a class="btn btn-default" href="f.php?id={$dataset.id}">Dokumentdetails anzeigen</a>
+					    <a class="btn btn-default" href="/downloads/{$dataset.filename}">Download ({$dataset.size})</a>
+                    </td>
+				</tr>
+			{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+{/if}
