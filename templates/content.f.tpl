@@ -23,11 +23,10 @@
         <p class="lead bg-info">Vorlagen zum Dokument</p>
         {foreach from=$file_vorlagen item=dataset}
         <dl>
-            <dt>Name</dt><dd>{$dataset.name} <a class="btn btn-default" href="v.php?id={$dataset.id}">Anzeigen</a></dd>
+            <dt>Name</dt><dd>{$dataset.name} <a class="btn btn-default" href="/vorlagen/{$dataset.id}">Anzeigen</a></dd>
             <dt>Titel</dt><dd>{$dataset.subject}</dd>
             <dt>Datum</dt><dd>{$dataset.date|date_format:"%d.%m.%Y"}</dd>
         </dl>
-
         {/foreach}
     </div>
 {/if}

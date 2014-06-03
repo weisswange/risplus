@@ -46,8 +46,8 @@
         {foreach from=$vorlagen_files item=dataset}
         <dl>
             <dt>Name</dt><dd>{$dataset.filename}<br />
-                <button class="btn btn-default modalbuttons" id="modal-{$dataset.id}" href="f.php?id={$dataset.id}">Anzeigen</button>
-                <a class="btn btn-default" href="f.php?id={$dataset.id}">Details</a></dd>
+                <button class="btn btn-default modalbuttons" id="modal-{$dataset.id}" href="/dokumente/{$dataset.id}">Anzeigen</button>
+                <a class="btn btn-default" href="/dokumente/{$dataset.id}">Details</a></dd>
         </dl>
 
         {/foreach}
@@ -115,7 +115,7 @@
                         {$dataset.type}
                     </td>
                     <td>
-                        <a class="btn btn-default" href="v.php?id={$dataset.id}">Details anzeigen</a>
+                        <a class="btn btn-default" href="/vorlagen/{$dataset.id}">Details anzeigen</a>
                     </td>
 				</tr>
 			{/foreach}

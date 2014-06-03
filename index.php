@@ -1,13 +1,15 @@
 <?php
 
-include_once('components/smarty/Smarty.class.php');
-include_once('classes/class.db.php');
+// include all required stuff
+include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.app.php');
 
-// create object
-$smarty = new Smarty;
+// start app
+$me = new App();
+$me->run();
+
 
 // template variables
-$aResultData = array();
+/*$aResultData = array();
 $sSearchErrorInputEmpty = '';
 $iResultCount = 0;
 $sSearchWord = '';
@@ -50,6 +52,5 @@ $smarty->assign('filter_reduce_niederschriften', $bFilterNiederschriften);
 $smarty->assign('search_results_count', $iResultCount);
 $smarty->assign('search_results_data', $aResultData);
 $smarty->assign('search_error_input_empty', $sSearchErrorInputEmpty);
-
+*/
 // display it
-$smarty->display('frame.s.tpl');
