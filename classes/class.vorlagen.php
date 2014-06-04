@@ -3,18 +3,33 @@
 class Vorlagen
 {
     private $oDb = null;
-    private $aResultsContent = array();
     private $sSearchWord = '';
+    private $iResultCount = 0;
 
-    function __construct($aSearch)
+    function __construct()
    	{
-   		$this->setSearchWord($aSearch);
-
    		$this->oDb = new DB();
-   		$this->aResultsContent = $this->oDb->searchVorlagen($this->sSearchWord);
    	}
 
-    protected function setSearchWord($aSearchWord)
+    public function getVorlagenBySearch($aSearch)
+    {
+        $this->setSearchWord($aSearch);
+        $aResultsRaw = $this->oDb->searchVorlagen($this->sSearchWord);
+        $aResults = array();
+
+        $iResultCount = 0;
+        foreach ($aResultsRaw as $aVorlage)
+        {
+            $aResults[] = $this->getVorlageObject($aVorlage);
+            $iResultCount++;
+        }
+
+        $this->setResultCount($iResultCount);
+
+        return $aResults;
+    }
+
+    private function setSearchWord($aSearchWord)
    	{
         $sSearchWord = $aSearchWord['s'];
 
@@ -30,13 +45,36 @@ class Vorlagen
    		return utf8_encode($this->sSearchWord);
    	}
 
-    public function getResults()
-   	{
-        return $this->aResultsContent;
-   	}
+    private function setResultCount($iResultCount)
+    {
+        $this->iResultCount = $iResultCount;
+    }
 
    	public function getResultCount()
    	{
-   		return sizeof($this->aResultsContent);
+   		return $this->iResultCount;
    	}
+
+    public function getVorlageById($iId)
+    {
+        if (! $aVorlage = $this->oDb->getVorlageById($iId))
+        {
+            throw new Exception('vorlage id not valid');
+        }
+
+        return $this->getVorlageObject($aVorlage);
+    }
+
+    private function getVorlageObject($aVorlage)
+    {
+        $oVorlage = new Vorlage();
+
+        $oVorlage->setId($aVorlage['id']);
+        $oVorlage->setDate($aVorlage['date']);
+        $oVorlage->setName($aVorlage['name']);
+        $oVorlage->setSubject($aVorlage['subject']);
+        $oVorlage->setType($aVorlage['type']);
+
+        return $oVorlage;
+    }
 }

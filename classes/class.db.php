@@ -191,7 +191,7 @@ class DB
 		return mysql_fetch_assoc($hRes);
 	}
 
-    function getVorlageData($iVorlageId)
+    function getVorlageById($iVorlageId)
    	{
    		$sSql = sprintf("SELECT * FROM sr_vorlage WHERE id = %u", $iVorlageId);
 

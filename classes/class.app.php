@@ -8,8 +8,8 @@ class App
     private $sModule = '';
     private $iParameter = '';
     private $aValidRoutes = array(
-        'vorlagen' => array('file' => 'v.php', 'object' => 'Vorlage'),
-        'dokumente' => array('file' => 'f.php', 'object' => 'Dokument'),
+        'vorlagen' => array('file' => 'v.php', 'object' => 'Vorlageview'),
+        'dokumente' => array('file' => 'f.php', 'object' => 'Dokumentview'),
         'index' => array('file' => 'i.php', 'object' => 'Index'),
     );
 

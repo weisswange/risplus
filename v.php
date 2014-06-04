@@ -1,8 +1,9 @@
 <?php
 
 include_once('classes/class.vorlagen.php');
+include_once('classes/class.vorlage.php');
 
-class Vorlage extends App
+class Vorlageview extends App
 {
     var $oDb = null;
     var $oSmarty = null;
@@ -18,11 +19,7 @@ class Vorlage extends App
     public function run()
     {
         // template variables
-        $sVorlageName = '';
-        $iVorlageId = 0;
-        $sVorlageSubject = '';
-        $iVorlageDate = '';
-        $aVorlagen = array();
+        $aFilesForVorlage = array();
         $sVorlageErrorEmptyParameter = '';
         $sVorlageErrorWrongId = '';
         $sShowForm = false;
@@ -30,21 +27,17 @@ class Vorlage extends App
         $sSearchWord = '';
         $iResultCount = 0;
         $aResultData = array();
+        $oVorlage = null;
 
         // search
         if (isset($this->iParameter) && $this->iParameter != 0)
         {
-            include('classes/class.vorlagedetails.php');
-
             try
             {
-                $oVorlage = new Vorlagedetails($this->iParameter);
-                $sVorlageName = $oVorlage->getVorlageName();
-                $iVorlageId = $oVorlage->getVorlageId();
-                $sVorlageSubject = $oVorlage->getVorlageSubject();
-                $iVorlageDate = $oVorlage->getVorlageDate();
+                $oVorlagen = new Vorlagen();
+                $oVorlage = $oVorlagen->getVorlageById($this->iParameter);
 
-                $aVorlagen = $this->oDb->getFilesForVorlage($iVorlageId);
+                $aFilesForVorlage = $this->oDb->getFilesForVorlage($oVorlage->getId());
             }
             catch (Exception $e)
             {
@@ -62,11 +55,10 @@ class Vorlage extends App
             {
                 include('classes/class.search.php');
 
-                $oVorlagen = new Vorlagen($_POST);
-
-                $iResultCount = $oVorlagen->getResultCount();
-                $aResultData = $oVorlagen->getResults();
+                $oVorlagen = new Vorlagen();
+                $aResultData = $oVorlagen->getVorlagenBySearch($_POST);
                 $sSearchWord = $oVorlagen->getSearchWord();
+                $iResultCount = $oVorlagen->getResultCount();
             }
         }
         else
@@ -82,11 +74,8 @@ class Vorlage extends App
         // collect variables
         $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
         $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
-        $this->oSmarty->assign('vorlage_details_name', $sVorlageName);
-        $this->oSmarty->assign('vorlage_details_id', $iVorlageId);
-        $this->oSmarty->assign('vorlage_details_date', $iVorlageDate);
-        $this->oSmarty->assign('vorlage_details_subject', $sVorlageSubject);
-        $this->oSmarty->assign('vorlagen_files', $aVorlagen);
+        $this->oSmarty->assign('vorlage', $oVorlage);
+        $this->oSmarty->assign('vorlagen_files', $aFilesForVorlage);
         $this->oSmarty->assign('vorlage_error_empty_parameter', $sVorlageErrorEmptyParameter);
         $this->oSmarty->assign('vorlage_error_wrong_id', $sVorlageErrorWrongId);
         $this->oSmarty->assign('vorlage_show_form', $sShowForm);

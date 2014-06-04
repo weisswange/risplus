@@ -1,6 +1,6 @@
 <?php
 
-class Dokument extends App
+class Dokumentview extends App
 {
     var $oDb = null;
     var $oSmarty = null;

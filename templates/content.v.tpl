@@ -3,9 +3,9 @@
 {elseif $vorlage_error_wrong_id != ''}
     <p class="lead bg-danger">{$vorlage_error_wrong_id}</p>
 {elseif $vorlage_show_form == false}
-    <h2>{$vorlage_details_name} <small>{$vorlage_details_date|date_format:"%d.%m.%Y"}</small></h2>
+    <h2>{$vorlage->getName()} <small>{$vorlage->getDate()|date_format:"%d.%m.%Y"}</small></h2>
     <div class="col-md-8">
-        <p class="lead">{$vorlage_details_subject}</p>
+        <p class="lead">{$vorlage->getSubject()}</p>
 
         {literal}
         <script type='text/javascript'>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="col-md-4" id="documentlist">
-        <form id="form-sidebar" role="form" action="/v.php" method="post">
+        <form id="form-sidebar" role="form" action="/vorlagen/" method="post">
        		<div class="form-group {$search_error_input_empty}">
        			<input name="s" type="text" class="form-control" id="s" placeholder="Neue Suche" {if $search_input_s != ""}value="{$search_input_s}"{/if} />
        	  	</div>
@@ -103,19 +103,19 @@
 			{foreach from=$search_results_data item=dataset}
 				<tr>
 					<td>
-                        {$dataset.name}
+                        {$dataset->getName()}
                     </td>
                     <td>
-                        {$dataset.subject}
+                        {$dataset->getSubject()}
                     </td>
                     <td>
-                        {$dataset.date|date_format:"%d.%m.%Y"}
+                        {$dataset->getDate()|date_format:"%d.%m.%Y"}
                     </td>
                     <td>
-                        {$dataset.type}
+                        {$dataset->getType()}
                     </td>
                     <td>
-                        <a class="btn btn-default" href="/vorlagen/{$dataset.id}">Details anzeigen</a>
+                        <a class="btn btn-default" href="/vorlagen/{$dataset->getId()}">Details anzeigen</a>
                     </td>
 				</tr>
 			{/foreach}
