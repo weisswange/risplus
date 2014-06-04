@@ -174,7 +174,7 @@ class DB
 		return $aContent;
 	}
 	
-	function getFileData($iFileId)
+	function getFileById($iFileId)
 	{
 		$sSql = sprintf("SELECT * FROM sr_file WHERE id = %u", $iFileId);
 		

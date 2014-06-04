@@ -5,6 +5,7 @@ class File
     private $iId = 0;
     private $sContent = '';
     private $sFilename = '';
+    private $sFilesize = 0;
 
     public function _construct()
     {
@@ -58,4 +59,22 @@ class File
     {
         return $this->sFilename;
     }
+
+    public function setSize($sFilename)
+    {
+        $this->sFilesize = $this->human_filesize(filesize($_SERVER['DOCUMENT_ROOT'] . '/downloads/' . $sFilename), 0);
+    }
+
+    public function getSize()
+    {
+        return $this->sFilesize;
+    }
+
+    private function human_filesize($bytes, $decimals = 2)
+   	{
+   		$sz = 'BKMGTP';
+   		$factor = floor((strlen($bytes) - 1) / 3);
+   		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+   	}
+
 }

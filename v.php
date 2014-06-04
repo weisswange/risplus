@@ -22,7 +22,7 @@ class Vorlageview extends App
         $aFilesForVorlage = array();
         $sVorlageErrorEmptyParameter = '';
         $sVorlageErrorWrongId = '';
-        $sShowForm = false;
+        $bShowForm = false;
         $sSearchErrorInputEmpty = '';
         $sSearchWord = '';
         $iResultCount = 0;
@@ -46,15 +46,13 @@ class Vorlageview extends App
         }
         elseif (isset($_POST) && sizeof($_POST) > 0)
         {
-            $sShowForm = true;
+            $bShowForm = true;
             if (! isset($_POST['s']) || (string) $_POST['s'] == '')
             {
                 $sSearchErrorInputEmpty = 'has-error';
             }
             else
             {
-                include('classes/class.search.php');
-
                 $oVorlagen = new Vorlagen();
                 $aResultData = $oVorlagen->getVorlagenBySearch($_POST);
                 $sSearchWord = $oVorlagen->getSearchWord();
@@ -63,7 +61,7 @@ class Vorlageview extends App
         }
         else
         {
-            $sShowForm = true;
+            $bShowForm = true;
         }
 
         $fi = new FilesystemIterator(__DIR__ . '/downloads', FilesystemIterator::SKIP_DOTS);
@@ -78,7 +76,7 @@ class Vorlageview extends App
         $this->oSmarty->assign('vorlagen_files', $aFilesForVorlage);
         $this->oSmarty->assign('vorlage_error_empty_parameter', $sVorlageErrorEmptyParameter);
         $this->oSmarty->assign('vorlage_error_wrong_id', $sVorlageErrorWrongId);
-        $this->oSmarty->assign('vorlage_show_form', $sShowForm);
+        $this->oSmarty->assign('vorlage_show_form', $bShowForm);
         $this->oSmarty->assign('search_error_input_empty', $sSearchErrorInputEmpty);
         $this->oSmarty->assign('search_input_s', $sSearchWord);
         $this->oSmarty->assign('search_results_count', $iResultCount);

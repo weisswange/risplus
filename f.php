@@ -23,6 +23,13 @@ class Dokumentview extends App
         $aVorlagen = array();
         $sFileErrorEmptyParameter = '';
         $sFileErrorWrongId = '';
+        $bShowForm = false;
+        $sSearchErrorInputEmpty = '';
+        $sSearchWord = '';
+        $iResultCount = 0;
+        $aResultData = array();
+        $bFilterEinladungen = false;
+        $bFilterNiederschriften = false;
 
         // search
         if (isset($this->iParameter) && $this->iParameter != 0)
@@ -39,6 +46,27 @@ class Dokumentview extends App
                 $sFileErrorWrongId = 'Keine Datei zur übergebenen ID gefunden';
             }
         }
+        elseif (isset($_POST) && sizeof($_POST) > 0)
+        {
+            $bShowForm = true;
+            if (! isset($_POST['s']) || (string) $_POST['s'] == '')
+            {
+                $sSearchErrorInputEmpty = 'has-error';
+            }
+            else
+            {
+                $oFiles = new Files();
+                $aResultData = $oFiles->getFilesBySearch($_POST);
+                $sSearchWord = $oFiles->getSearchWord();
+                $iResultCount = $oFiles->getResultCount();
+                $bFilterNiederschriften = $oFiles->isFilterNiederschriftenActive();
+                $bFilterEinladungen = $oFiles->isFilterEinladungenActive();
+            }
+        }
+        else
+        {
+            $bShowForm = true;
+        }
 
         $fi = new FilesystemIterator(__DIR__ . '/downloads', FilesystemIterator::SKIP_DOTS);
         $iStatsFilesCount = iterator_count($fi);
@@ -48,10 +76,17 @@ class Dokumentview extends App
         // collect variables
         $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
         $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
+        $this->oSmarty->assign('file_show_form', $bShowForm);
         $this->oSmarty->assign('file', $oFile);
         $this->oSmarty->assign('file_vorlagen', $aVorlagen);
         $this->oSmarty->assign('file_error_empty_parameter', $sFileErrorEmptyParameter);
         $this->oSmarty->assign('file_error_wrong_id', $sFileErrorWrongId);
+        $this->oSmarty->assign('search_error_input_empty', $sSearchErrorInputEmpty);
+        $this->oSmarty->assign('search_input_s', $sSearchWord);
+        $this->oSmarty->assign('search_results_count', $iResultCount);
+        $this->oSmarty->assign('search_results_data', $aResultData);
+        $this->oSmarty->assign('filter_remove_einladungen', $bFilterEinladungen);
+        $this->oSmarty->assign('filter_reduce_niederschriften', $bFilterNiederschriften);
 
         return true;
     }
