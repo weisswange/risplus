@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: stewei
- * Date: 04.06.14 (23)
- * Time: 15:49
- * To change this template use File | Settings | File Templates.
- */
 
 class Vorlage
 {

@@ -1,5 +1,8 @@
 <?php
 
+include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.files.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.file.php');
+
 class Dokumentview extends App
 {
     var $oDb = null;
@@ -16,8 +19,7 @@ class Dokumentview extends App
     public function run()
     {
         // template variables
-        $sFileName = '';
-        $iFileId = 0;
+        $oFile = null;
         $aVorlagen = array();
         $sFileErrorEmptyParameter = '';
         $sFileErrorWrongId = '';
@@ -25,15 +27,12 @@ class Dokumentview extends App
         // search
         if (isset($this->iParameter) && $this->iParameter != 0)
         {
-            include('classes/class.filedetails.php');
-
             try
             {
-                $oFile = new Filedetails($this->iParameter);
-                $sFileName = $oFile->getFileName();
-                $iFileId = $oFile->getFileId();
+                $oFiles = new Files();
+                $oFile = $oFiles->getFileById($this->iParameter);
 
-                $aVorlagen = $this->oDb->getVorlagenForFile($iFileId);
+                $aVorlagen = $this->oDb->getVorlagenForFile($oFile->getId());
             }
             catch (Exception $e)
             {
@@ -49,8 +48,7 @@ class Dokumentview extends App
         // collect variables
         $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
         $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
-        $this->oSmarty->assign('file_details_name', $sFileName);
-        $this->oSmarty->assign('file_details_id', $iFileId);
+        $this->oSmarty->assign('file', $oFile);
         $this->oSmarty->assign('file_vorlagen', $aVorlagen);
         $this->oSmarty->assign('file_error_empty_parameter', $sFileErrorEmptyParameter);
         $this->oSmarty->assign('file_error_wrong_id', $sFileErrorWrongId);

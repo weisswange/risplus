@@ -1,4 +1,4 @@
-<h2>{$file_details_name}</h2>
+<h2>{$file->getFilename()}</h2>
 
 {if $file_error_empty_parameter != ''}
     <p class="lead bg-danger">{$file_error_empty_parameter}</p>
@@ -11,12 +11,12 @@
         <script type='text/javascript'>
             $(document).ready(function()
             {
-                $('a#modal-body-{/literal}{$file_details_id}{literal}').media({width:800, height:1100});
+                $('a#modal-body-{/literal}{$file->getId()}{literal}').media({width:800, height:1100});
             });
         </script>
         {/literal}
 
-        <a id="modal-body-{$file_details_id}" class="media" href="/downloads/{$file_details_name}"></a>
+        <a id="modal-body-{$file->getId()}" class="media" href="/downloads/{$file->getFilename()}"></a>
     </div>
 
     <div class="col-md-4">
