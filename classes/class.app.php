@@ -10,6 +10,7 @@ class App
     private $aValidRoutes = array(
         'vorlagen' => array('file' => 'v.php', 'object' => 'Vorlage'),
         'dokumente' => array('file' => 'f.php', 'object' => 'Dokument'),
+        'index' => array('file' => 'i.php', 'object' => 'Index'),
     );
 
     public $oSmarty = null;
@@ -38,7 +39,7 @@ class App
         // first page
         if ($sRoute == '' || $sRoute == '/')
         {
-            return null;
+            $sRoute = '/index/';
         }
 
         $aRoute = explode('/', $sRoute);
