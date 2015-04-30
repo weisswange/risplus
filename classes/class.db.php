@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DB
+ */
 class DB 
 {
 	var $sDatabase = 'stadtrat';

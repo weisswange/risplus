@@ -84,35 +84,35 @@ function fetchData($iMonth, $iYear)
 				$iVorlageId = $oDb->insertVorlage($aVorlageMeta);
 			}
 
-			foreach ($vorlageHtml->find('table.smcdocbox td.smc_doc') as $vorlageForm)
+			foreach ($vorlageHtml->find('table.smcdocbox td.smcdocname') as $vorlageForm)
 			{
-				$vorlageFormDataRaw = $vorlageForm->find('input[type=hidden]');
-				$vorlageFormData = array();
+				$oVorlageFileLink = $vorlageForm->find('a', 0);
 
-				foreach ($vorlageFormDataRaw as $input)
+				$iFileId = 0;
+				$sFileLink = '';
+				if (is_object($oVorlageFileLink))
 				{
-					$vorlageFormData[$input->name] = $input->value;
+					$sFileLink = (string) $oVorlageFileLink->href;
+
+					if (preg_match('/id=(\d{1,})/', $sFileLink, $aMatches))
+					{
+						$iFileId = $aMatches[1];
+					}
 				}
 
-				if (! isset($vorlageFormData['DT']) || $vorlageFormData['DT'] == '' || ! isset($vorlageFormData['DEN']) || $vorlageFormData['DEN'] == '')
+				if ($iFileId != 0 && $sFileLink != '')
 				{
-					continue;
-				}
+					$aFile = getForm($sFileLink, $iFileId);
 
-				$sFileName = $vorlageFormData['DT'] . '.' . $vorlageFormData['DEN'];
-				$iFileId = $oDb->fileExists($sFileName);
-
-				if ($iFileId === false)
-				{
 					$aFileData = array(
-						'content' => getForm($vorlageFormData),
-						'filename' => $sFileName,
+						'content' => $aFile['content'],
+						'filename' => $aFile['filename'],
 					);
-
+					
 					$iFileId = $oDb->insertFile($aFileData);
-				}
 
-				$oDb->insertVorlageFileConnection($iVorlageId, $iFileId);
+					$oDb->insertVorlageFileConnection($iVorlageId, $iFileId);
+				}
 
 				$iFileCount++;
 			}
@@ -124,54 +124,52 @@ function fetchData($iMonth, $iYear)
 	}	
 }
 
-function getForm($aData)
+function getForm($sFileLink, $iFileId)
 {
 	include('config/stopwords.php');
 	$sText = '';
+	$sFileName = '';
 
-	if ($aData['DT'] == '' || $aData['DEN'] == '')
+	$url = htmlspecialchars_decode(BASEURL . $sFileLink);
+
+	//open connection
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_VERBOSE, 0);
+	curl_setopt($ch, CURLOPT_HEADER, 1);
+
+	$response = curl_exec($ch);//get curl response
+
+	// Then, after your curl_exec call:
+	$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+	$header = substr($response, 0, $header_size);
+	$body = substr($response, $header_size);
+
+	$sFileType = '';
+	if (preg_match('/Content-Disposition: .*filename=".*?\.([^ ]+)"/', $header, $aMatches)) 
 	{
-		return false;
+		$sFileType = $aMatches[1];
+		$sFileName = $iFileId . '.' . $sFileType;
 	}
-	
-	$filename = 'downloads/' . $aData['DT'] . '.' . $aData['DEN'];
-	
-	// get file
-	if (! file_exists($filename))
+
+	if ($sFileName != '')
 	{
-		$url = BASEURL . 'getfile.asp';
-		$sData = '';
-		foreach ($aData as $key => $value) 
-		{ 
-			$sData .= $key.'='.$value.'&'; 
-		}
-		rtrim($sData, '&');
-
-		//open connection
-		$ch = curl_init();
-
-		//set the url, number of POST vars, POST data
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, count($aData));
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $sData);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-		$data = curl_exec($ch);//get curl response
-
-		file_put_contents($filename, $data);
-
-		echo ' --> ' . $filename . "\n";
-
-		//done
-		curl_close($ch);
+		file_put_contents('downloads/' . $sFileName, $body);
+		echo ' --> ' . $sFileName . "\n";
 	}
+
+	//done
+	curl_close($ch);
 	
 	foreach ($stopwords['de'] as $nKey => $sValue) 
 	{
 		$stopwords['de'][$nKey] = "/\b$sValue\b/i";
 	}
 	
-	$command = 'components/xpdfbin/bin64/pdftotext -q ' . $filename . ' -';
+	$command = 'components/xpdfbin/bin64linux/pdftotext -q ' . '/var/www/html/downloads/' . $sFileName . ' -';
 	$a = exec($command, $text, $retval);
 	if (sizeof($text) > 0)
 	{
@@ -179,7 +177,7 @@ function getForm($aData)
 		$sText = preg_replace($stopwords["de"], ' ', $sText);
 	}
 	
-	return $sText;
+	return array('content' => $sText, 'filename' => $sFileName);
 }
 
 function pcreEntityToUtf($matches) 
