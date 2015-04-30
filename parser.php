@@ -148,11 +148,9 @@ function getForm($sFileLink, $iFileId)
 	$header = substr($response, 0, $header_size);
 	$body = substr($response, $header_size);
 
-	$sFileType = '';
-	if (preg_match('/Content-Disposition: .*filename=".*?\.([^ ]+)"/', $header, $aMatches)) 
+	if (preg_match('/Content-Disposition: .*filename="(.*?)\.([^ ]+)"/', $header, $aMatches))
 	{
-		$sFileType = $aMatches[1];
-		$sFileName = $iFileId . '.' . $sFileType;
+		$sFileName = $iFileId . '_' . $aMatches[1] . '.' . $aMatches[2];
 	}
 
 	if ($sFileName != '')
