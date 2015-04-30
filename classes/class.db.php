@@ -255,6 +255,7 @@ class DB
 
     function searchVorlagen($sSearchWord)
     {
+        $sSearchWord = preg_replace('/\s{1,}/', '%', $sSearchWord);
         $sSql = sprintf("SELECT * FROM sr_vorlage WHERE name = '%s' OR subject LIKE '%%%s%%' ORDER BY date DESC", $sSearchWord, $sSearchWord);
 
         if (! $hRes = mysql_query($sSql))
