@@ -10,6 +10,7 @@ class App
     private $aValidRoutes = array(
         'vorlagen' => array('file' => 'v.php', 'object' => 'Vorlageview'),
         'dokumente' => array('file' => 'f.php', 'object' => 'Dokumentview'),
+        'impressum' => array('file' => 'imprint.php', 'object' => 'Imprintview'),
         'index' => array('file' => 'i.php', 'object' => 'Index'),
     );
 

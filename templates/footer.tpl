@@ -2,7 +2,7 @@
 		<p class="invisible">kontakt</p>
 		<ul class="list-inline">
 			<li><a class="btn btn-default btn-sm" href="mailto:info@risplus.halle-waehlt.de" role="button">E-Mail</a></li>
-            <li><a class="btn btn-default btn-sm" href="impressum.php" role="button">Impressum</a></li>
+            <li><a class="btn btn-default btn-sm" href="/impressum/" role="button">Impressum</a></li>
 		</ul>
         <p class="text-muted">
             <small>
