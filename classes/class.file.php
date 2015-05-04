@@ -6,6 +6,7 @@ class File
     private $sContent = '';
     private $sFilename = '';
     private $sFilesize = 0;
+    private $sScore = 0;
 
     public function _construct()
     {
@@ -77,4 +78,13 @@ class File
    		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
    	}
 
+    public function setScore($sScore)
+    {
+        $this->sScore = round($sScore, 2);
+    }
+
+    public function getScore()
+    {
+        return $this->sScore;
+    }
 }

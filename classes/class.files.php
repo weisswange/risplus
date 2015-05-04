@@ -108,6 +108,7 @@ class Files
         $oFile->setContent($aFile['content']);
         $oFile->setFilename($aFile['filename']);
         $oFile->setSize($aFile['filename']);
+        $oFile->setScore($aFile['score']);
 
         return $oFile;
     }

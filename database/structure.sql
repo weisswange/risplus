@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS `sr_file` (
   `content` longtext,
   `filename` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `sr_vorlage` (
   `date` int(11) DEFAULT NULL,
   `subject` mediumtext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Daten Export vom Benutzer nicht ausgewählt
 
@@ -49,7 +49,11 @@ CREATE TABLE IF NOT EXISTS `sr_vorlage_file` (
   `vorlageid` int(11) DEFAULT NULL,
   `fileid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE sr_file ADD FULLTEXT index_content(content);
+ALTER TABLE sr_file ADD FULLTEXT index_filename(filename);
+ALTER TABLE sr_vorlage ADD FULLTEXT index_subject(subject);
 
 -- Daten Export vom Benutzer nicht ausgewählt
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -30,7 +30,7 @@
 </div>
 
 <div class="col-md-3" id="bigteaser">
-	<p class="lead">Recherche in Dokumenten des Ratsinformationssystems der Stadt Halle</p>
+	<p class="lead">Recherche in Dokumenten</p>
     <a class="btn btn-default btn-block" href="v.php">In Vorlagen suchen</a>
 </div>
 

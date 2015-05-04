@@ -14,6 +14,11 @@ class DB
 	
 	function __construct()
 	{
+        if (is_resource($this->sDbHandle))
+        {
+            return true;
+        }
+
 		// db connect
 		if (! $this->sDbHandle = mysql_connect($this->sHost, $this->sUser, $this->sPassword))
 		{
@@ -24,6 +29,8 @@ class DB
 		{
 		    die('Datenbank konnte nicht ausgewählt werden: ' . mysql_error());
 		}
+
+        return true;
 	}
 	
 	function insertVorlage($aData)
@@ -115,7 +122,8 @@ class DB
 	{
 		$sSearchWord = preg_replace('/\s/', '%', $sSearchWord);
 		
-		$sSql = sprintf("SELECT * FROM sr_file WHERE content LIKE '%%%s%%'", $sSearchWord);
+		//$sSql = sprintf("SELECT * FROM sr_file WHERE content LIKE '%%%s%%'", $sSearchWord);
+        $sSql = sprintf("SELECT *, MATCH(content) AGAINST('%%%s%%') AS score FROM sr_file WHERE MATCH(content) AGAINST('%%%s%%')", $sSearchWord, $sSearchWord);
 		
 		if ($bFilterEinladungen)
 		{
@@ -126,6 +134,8 @@ class DB
         {
             $sSql .= " AND filename LIKE '%niederschrift%'";
         }
+
+        $sSql .= " ORDER BY score DESC LIMIT 30";
 		
 		if (! $hRes = mysql_query($sSql))
 		{
@@ -231,9 +241,6 @@ class DB
 
     function getDatabaseSize()
     {
-        mysql_select_db("yourdatabase");
-        $q = mysql_query("");
-
         $sSql = "SHOW TABLE STATUS";
 
         if (! $hRes = mysql_query($sSql))
@@ -248,7 +255,7 @@ class DB
         }
 
         $decimals = 2;
-        $iSizeInMegabytes = number_format($iSize/(1024*1024),$decimals);
+        $iSizeInMegabytes = number_format($iSize/(1024*1024), 2, ',', '.');
 
         return $iSizeInMegabytes;
     }

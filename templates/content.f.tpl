@@ -60,7 +60,7 @@
        	</form>
     </div>
     <div class="col-md-3" id="bigteaser">
-    	<p class="lead">Recherche in Dokumenten des Ratsinformationssystems der Stadt Halle</p>
+    	<p class="lead">Recherche in Dokumenten</p>
         <a class="btn btn-default btn-block" href="/vorlagen/">In Vorlagen suchen</a>
     </div>
 {/if}
@@ -98,7 +98,7 @@
 							});
 						</script>
 						{/literal}
-                        <p class="text-muted">{$dataset->getFilename()}</p>
+                        <p class="text-muted">{$dataset->getFilename()}&nbsp;&ndash;&nbsp;Trefferwert: {$dataset->getScore()}</p>
 						<button class="btn btn-default" data-toggle="modal" data-target="#myModal{$dataset->getId()}" title="{$dataset->getFilename()}">Dokument ansehen</button>
 						<div class="modal fade bs-example-modal-lg" id="myModal{$dataset->getId()}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 					        <div class="modal-dialog modal-lg">
