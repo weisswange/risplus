@@ -16,3 +16,20 @@ p.bg-success {
     border:1px solid #dddddd;
     padding:10px;
 }
+
+div#content {
+    margin-top:20px;
+    margin-bottom: 20px;
+}
+
+ul#navigation {
+    margin-top:20px;
+}
+
+ul#navigation li {
+    display:inline;
+}
+
+ul#navigation li a {
+    width:200px;
+}

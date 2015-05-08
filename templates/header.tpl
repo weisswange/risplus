@@ -23,11 +23,22 @@
     <script src="/js/jquery.media.js"></script>
 </head>
 <body>
-	<div id="header" class="col-md-12">
+	<div id="header" class="col-md-12 bg-warning">
 		<div class="col-md-4">
 			<h1><a href="/">{$title}</a>&nbsp;<small>{$subtitle}</small></h1>
 		</div>
 		<div class="col-md-8">
+            <ul id="navigation">
+                <li>
+                    <a href="/dokumente/" class="btn btn-default" role="button">Dokumente</a>
+                </li>
+                <li>
+                    <a href="/vorlagen/" class="btn btn-default" role="button">Vorlagen</a>
+                </li>
+                <li>
+                    <a href="/impressum/" class="btn btn-default" role="button">Impressum</a>
+                </li>
+            </ul>
 		</div>
 	</div>
     <div id="content" class="col-md-12">

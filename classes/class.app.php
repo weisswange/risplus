@@ -11,6 +11,7 @@ class App
     private $sModuleConfigFile = 'mod_conf.php';
     private $sModuleContent = '';
     private $sModuleName = '';
+    private $sModuleTitle = '';
 
     // GET / POST PARAMETER
     private $iParameter = '';
@@ -115,15 +116,6 @@ class App
         $o->run();
         $this->sModuleContent = $o->show();
 
-        $fi = new FilesystemIterator($_SERVER['DOCUMENT_ROOT'] . '/downloads', FilesystemIterator::SKIP_DOTS);
-        $iStatsFilesCount = iterator_count($fi);
-
-        $sDbSize = $this->oDb->getDatabaseSize();
-
-        // collect variables
-        $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
-        $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
-
         $this->show();
     }
 
@@ -142,6 +134,21 @@ class App
 
     public function show()
     {
+        $fi = new FilesystemIterator($_SERVER['DOCUMENT_ROOT'] . '/downloads', FilesystemIterator::SKIP_DOTS);
+        $iStatsFilesCount = iterator_count($fi);
+
+        $sDbSize = $this->oDb->getDatabaseSize();
+
+        $sSubTitle = '';
+        if (isset($this->aModuleConfiguration[$this->sModuleName]['title']) && $this->aModuleConfiguration[$this->sModuleName]['title'] != '')
+        {
+            $sSubTitle = $this->aModuleConfiguration[$this->sModuleName]['title'];
+        }
+
+        // collect variables
+        $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
+        $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
+        $this->oSmarty->assign('subtitle', $sSubTitle);
         $this->oSmarty->assign('content', $this->sModuleContent);
         $this->oSmarty->display('frame.tpl');
     }

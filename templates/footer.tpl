@@ -1,9 +1,5 @@
-	<div id="footer" class="col-md-12">
-		<p class="invisible">kontakt</p>
-		<ul class="list-inline">
-			<li><a class="btn btn-default btn-sm" href="mailto:info@risplus.halle-waehlt.de" role="button">E-Mail</a></li>
-            <li><a class="btn btn-default btn-sm" href="/impressum/" role="button">Impressum</a></li>
-		</ul>
+	</div>
+    <div id="footer" class="col-md-12 bg-warning">
         <p class="text-muted">
             <small>
                 <strong>Information:</strong> ris+ ist in der Testphase und enthält aktuell die Dokumente und Vorlagen des
@@ -12,7 +8,8 @@
         </p>
         <p class="text-muted">
             <small>
-                {$files} Dokumente / {$database} MB Daten / <a href="https://github.com/weisswange/risplus">git</a>
+                Datenbestand: {$files} Dokumente / {$database} MB Daten<br />
+                Git: <a href="https://github.com/weisswange/risplus">https://github.com/weisswange/risplus</a>
             </small>
         </p>
     </div>

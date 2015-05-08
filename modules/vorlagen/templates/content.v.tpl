@@ -73,7 +73,7 @@
     </div>
     <div class="col-md-3" id="bigteaser">
     	<p class="lead">Recherche in Vorlagen</p>
-        <a class="btn btn-default btn-block" href="/dokumente/">In Dokumenten suchen</a>
+        <p>Lorem ipsum dolor</p>
     </div>
 {/if}
 
