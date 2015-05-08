@@ -68,14 +68,7 @@ class Dokumentview extends App
             $bShowForm = true;
         }
 
-        $fi = new FilesystemIterator(__DIR__ . '/downloads', FilesystemIterator::SKIP_DOTS);
-        $iStatsFilesCount = iterator_count($fi);
-
-        $sDbSize = $this->oDb->getDatabaseSize();
-
         // collect variables
-        $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
-        $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
         $this->oSmarty->assign('file_show_form', $bShowForm);
         $this->oSmarty->assign('file', $oFile);
         $this->oSmarty->assign('file_vorlagen', $aVorlagen);
@@ -93,6 +86,6 @@ class Dokumentview extends App
 
     public function show()
     {
-        $this->oSmarty->display('frame.f.tpl');
+        return $this->oSmarty->fetch(__DIR__ . '/templates/content.f.tpl');
     }
 }

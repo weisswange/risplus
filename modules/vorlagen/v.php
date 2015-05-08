@@ -64,14 +64,7 @@ class Vorlageview extends App
             $bShowForm = true;
         }
 
-        $fi = new FilesystemIterator(__DIR__ . '/downloads', FilesystemIterator::SKIP_DOTS);
-        $iStatsFilesCount = iterator_count($fi);
-
-        $sDbSize = $this->oDb->getDatabaseSize();
-
         // collect variables
-        $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
-        $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
         $this->oSmarty->assign('vorlage', $oVorlage);
         $this->oSmarty->assign('vorlagen_files', $aFilesForVorlage);
         $this->oSmarty->assign('vorlage_error_empty_parameter', $sVorlageErrorEmptyParameter);
@@ -87,6 +80,6 @@ class Vorlageview extends App
 
     public function show()
     {
-        $this->oSmarty->display('frame.v.tpl');
+        return $this->oSmarty->fetch(__DIR__ . '/templates/content.v.tpl');
     }
 }
