@@ -41,10 +41,11 @@ class App
      */
     function __construct()
     {
-        $this->setRoute();
-        $this->setSmarty();
         $this->oDb = new DB();
         $this->oMod = new Module();
+
+        $this->setRoute();
+        $this->setSmarty();
 
         return true;
     }
