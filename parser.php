@@ -2,7 +2,7 @@
 date_default_timezone_set("Europe/Berlin");
 
 // example of how to modify HTML contents
-include('classes/simple_html_dom.php');
+include('components/simplehtmldom/simple_html_dom.php');
 include('classes/class.db.php');
 
 // get DOM from URL or file
