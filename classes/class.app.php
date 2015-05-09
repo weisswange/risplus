@@ -1,7 +1,9 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/components/smarty/Smarty.class.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.modules.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.db.php');
+
+include_once($_SERVER['DOCUMENT_ROOT'] . '/components/smarty/Smarty.class.php');
 
 /**
  * Main risplus class
@@ -12,31 +14,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.db.php');
  */
 class App
 {
-    /**
-     * @var array   stores module configuration
-     */
-    private $aModuleConfiguration = array();
-
-    /**
-     * @var string  path to modules-directory
-     */
-    private $sModulesPath = 'modules';
-
-    /**
-     * @var string  module config file name
-     */
-    private $sModuleConfigFile = 'mod_conf.php';
-
-    /**
-     * @var string  stores module output
-     */
-    private $sModuleContent = '';
-
-    /**
-     * @var string  stores module name
-     */
-    private $sModuleName = '';
-
     /**
      * @var string  stores module parameter
      */
@@ -53,39 +30,21 @@ class App
     protected $oDb = null;
 
     /**
+     * @var Module|null Module object
+     */
+    private $oMod = null;
+
+    /**
      *  Constructor
      *
      * @return \App
      */
     function __construct()
     {
-        $this->registerModules();
         $this->setRoute();
         $this->setSmarty();
         $this->oDb = new DB();
-
-        return true;
-    }
-
-    /**
-     * Checks modules directory and registers all available and valid modules
-     *
-     * @return bool
-     */
-    private function registerModules()
-    {
-        // traverse modules directory
-        foreach (new DirectoryIterator($this->sModulesPath) as $oModuleDir)
-        {
-            if ($oModuleDir->isDir())
-            {
-                $sModuleConfigFile = $oModuleDir->getRealPath() . '/' . $this->sModuleConfigFile;
-                if (is_file($sModuleConfigFile))
-                {
-                    include_once($sModuleConfigFile);
-                }
-            }
-        }
+        $this->oMod = new Module();
 
         return true;
     }
@@ -125,7 +84,7 @@ class App
             return null;
         }
 
-        if (! $this->setModule($aRoute[1]))
+        if (! $this->oMod->setModule($aRoute[1]))
         {
             return null;
         }
@@ -139,53 +98,24 @@ class App
     }
 
     /**
-     * Checks if requested module exists and sets it
-     *
-     * @param $sModule
-     * @return bool
-     */
-    private function setModule($sModule)
-    {
-        $sModule = filter_var($sModule, FILTER_SANITIZE_STRING);
-
-        if (! array_key_exists($sModule, $this->aModuleConfiguration))
-        {
-            return false;
-        }
-
-        $this->sModuleName = $sModule;
-        return true;
-    }
-
-    /**
-     * returns current module name
-     *
-     * @return string
-     */
-    public function getModule()
-    {
-        return $this->sModuleName;
-    }
-
-    /**
      * Runs the application
      *
      * @return bool
      */
     public function run()
     {
-        $sClassIncludePath = $_SERVER['DOCUMENT_ROOT'] . '/' . $this->sModulesPath . '/' . $this->getModule() . '/' . $this->aModuleConfiguration[$this->sModuleName]['file'];
+        $sClassIncludePath = $this->oMod->getModuleFilePath();
         if (! include_once($sClassIncludePath))
         {
             die('Class could not be loaded');
         }
 
-        $sClass = $this->aModuleConfiguration[$this->sModuleName]['object'];
+        $sClass = $this->oMod->getModuleClass();
 
         $o = new $sClass($this->getParameter());
         $o->run();
-        $this->sModuleContent = $o->show();
-        $this->oSmarty->assign('content', $this->sModuleContent);
+        $this->oMod->setModuleContent($o->show());
+        $this->oSmarty->assign('content', $this->oMod->getModuleContent());
 
         $fi = new FilesystemIterator($_SERVER['DOCUMENT_ROOT'] . '/downloads', FilesystemIterator::SKIP_DOTS);
         $iStatsFilesCount = iterator_count($fi);
