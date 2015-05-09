@@ -1,6 +1,6 @@
 <?php
 
-class Imprintview extends App
+class Imprintview extends App implements Module
 {
     var $oDb = null;
     var $oSmarty = null;

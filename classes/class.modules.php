@@ -1,5 +1,7 @@
 <?php
 
+include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/i.module.php');
+
 /**
  * Path for modules directory
  */
@@ -11,10 +13,15 @@ define('MODULE_PATH', 'modules');
 define('MODULE_CONFIG_FILE', 'mod_conf.php');
 
 /**
- * Module methods
+ * ModuleHandler methods
  */
-class Module
+class ModuleHandler
 {
+    /**
+     * @var object  Current module
+     */
+    private $o;
+
     /**
      * @var array   stores module configuration
      */
@@ -49,15 +56,45 @@ class Module
         // traverse modules directory
         foreach (new DirectoryIterator(MODULE_PATH) as $oModuleDir)
         {
-            if ($oModuleDir->isDir())
+            if (! $oModuleDir->isDir())
             {
-                $sModuleConfigFile = $oModuleDir->getRealPath() . '/' . MODULE_CONFIG_FILE;
-                if (is_file($sModuleConfigFile))
-                {
-                    include_once($sModuleConfigFile);
-                }
+                continue;
             }
+
+            $sModuleConfigFile = $oModuleDir->getRealPath() . '/' . MODULE_CONFIG_FILE;
+            if (! is_file($sModuleConfigFile))
+            {
+                continue;
+            }
+
+            include_once($sModuleConfigFile);
         }
+
+        return true;
+    }
+
+    public function executeCurrentModule($iParameter)
+    {
+        $sClassIncludePath = $this->getModuleFilePath();
+        if (! include_once($sClassIncludePath))
+        {
+            die('Class could not be loaded');
+        }
+
+        $sClass = $this->getModuleClass();
+
+        $this->o = new $sClass($iParameter);
+
+        // check if module implements interface
+        $aClassInterfaces = class_implements($this->o);
+
+        if (! array_key_exists('Module', $aClassInterfaces))
+        {
+            die($this->getModuleFilePath() . ' is missing the Module interface');
+        }
+
+        $this->o->run();
+        $this->setModuleContent();
 
         return true;
     }
@@ -76,7 +113,6 @@ class Module
         {
             return false;
         }
-
         $this->sModuleName = $sModule;
         return true;
     }
@@ -96,17 +132,17 @@ class Module
      *
      * @return string
      */
-    public function getModuleFilePath()
+    private function getModuleFilePath()
     {
         return $_SERVER['DOCUMENT_ROOT'] . '/' . MODULE_PATH . '/' . $this->getModule() . '/' . $this->aModuleConfiguration[$this->sModuleName]['file'];
     }
 
     /**
-     * Returns Module Class Name
+     * Returns ModuleHandler Class Name
      *
      * @return string
      */
-    public function getModuleClass()
+    private function getModuleClass()
     {
         return $this->aModuleConfiguration[$this->sModuleName]['object'];
     }
@@ -117,9 +153,9 @@ class Module
      * @param $sContent
      * @return bool
      */
-    public function setModuleContent($sContent)
+    public function setModuleContent()
     {
-        $this->sModuleContent = $sContent;
+        $this->sModuleContent = $this->o->show();
         return true;
     }
 

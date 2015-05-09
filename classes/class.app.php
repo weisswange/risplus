@@ -30,7 +30,7 @@ class App
     protected $oDb = null;
 
     /**
-     * @var Module|null Module object
+     * @var ModuleHandler|null ModuleHandler object
      */
     private $oMod = null;
 
@@ -42,7 +42,7 @@ class App
     function __construct()
     {
         $this->oDb = new DB();
-        $this->oMod = new Module();
+        $this->oMod = new ModuleHandler();
 
         $this->setRoute();
         $this->setSmarty();
@@ -105,18 +105,8 @@ class App
      */
     public function run()
     {
-        $sClassIncludePath = $this->oMod->getModuleFilePath();
-        if (! include_once($sClassIncludePath))
-        {
-            die('Class could not be loaded');
-        }
-
-        $sClass = $this->oMod->getModuleClass();
-
-        $o = new $sClass($this->getParameter());
-        $o->run();
-        $this->oMod->setModuleContent($o->show());
-        $this->oSmarty->assign('content', $this->oMod->getModuleContent());
+        // run current module
+        $this->oMod->executeCurrentModule($this->getParameter());
 
         $fi = new FilesystemIterator($_SERVER['DOCUMENT_ROOT'] . '/downloads', FilesystemIterator::SKIP_DOTS);
         $iStatsFilesCount = iterator_count($fi);
@@ -124,6 +114,7 @@ class App
         $sDbSize = $this->oDb->getDatabaseSize();
 
         // collect variables
+        $this->oSmarty->assign('content', $this->oMod->getModuleContent());
         $this->oSmarty->assign('stats_count_files', $iStatsFilesCount);
         $this->oSmarty->assign('stats_count_dbsize', $sDbSize);
 

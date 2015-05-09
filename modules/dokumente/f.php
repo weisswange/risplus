@@ -3,7 +3,7 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.files.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.file.php');
 
-class Dokumentview extends App
+class Dokumentview extends App implements Module
 {
     var $oDb = null;
     var $oSmarty = null;
