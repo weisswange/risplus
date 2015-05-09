@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * Path for modules directory
+ */
 define('MODULE_PATH', 'modules');
+
+/**
+ * Name of module config file
+ */
 define('MODULE_CONFIG_FILE', 'mod_conf.php');
 
 /**
@@ -23,6 +30,9 @@ class Module
      */
     private $sModuleName = '';
 
+    /**
+     * Constructor
+     */
     function __construct()
     {
         $this->aModuleConfiguration = array();
@@ -81,22 +91,43 @@ class Module
         return $this->sModuleName;
     }
 
+    /**
+     * Returns path to module core file
+     *
+     * @return string
+     */
     public function getModuleFilePath()
     {
         return $_SERVER['DOCUMENT_ROOT'] . '/' . MODULE_PATH . '/' . $this->getModule() . '/' . $this->aModuleConfiguration[$this->sModuleName]['file'];
     }
 
+    /**
+     * Returns Module Class Name
+     *
+     * @return string
+     */
     public function getModuleClass()
     {
         return $this->aModuleConfiguration[$this->sModuleName]['object'];
     }
 
+    /**
+     * Sets module content
+     *
+     * @param $sContent
+     * @return bool
+     */
     public function setModuleContent($sContent)
     {
         $this->sModuleContent = $sContent;
         return true;
     }
 
+    /**
+     * returns module content
+     *
+     * @return string
+     */
     public function getModuleContent()
     {
         return $this->sModuleContent;
