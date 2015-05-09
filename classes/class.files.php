@@ -1,21 +1,57 @@
 <?php
 
+/**
+ *  Methods for files
+ */
 class Files
 {
-	private $iFileId = 0;
-	private $oDb = null;
+    /**
+     * @var int file id
+     */
+    private $iFileId = 0;
+
+    /**
+     * @var DB|null database object
+     */
+    private $oDb = null;
+
+    /**
+     * @var bool    filter for einladungen
+     */
     private $bFilterEinladungen = false;
+
+    /**
+     * @var bool    filter for niederschriften
+     */
     private $bFilterNiederschriften = false;
+
+    /**
+     * @var string  search string
+     */
     private $sSearchWord = '';
+
+    /**
+     * @var int     counter for datasets
+     */
     private $iResultCount = 0;
 
-	function __construct()
+    /**
+     *  Constructor
+     */
+    function __construct()
 	{
 		$this->oDb = new DB();
 
         return true;
 	}
 
+    /**
+     * Returns file object
+     *
+     * @param $iId
+     * @return File
+     * @throws Exception
+     */
     public function getFileById($iId)
     {
         $this->setFileId($iId);
@@ -28,6 +64,12 @@ class Files
 		return $this->getFileObject($aFile);
     }
 
+    /**
+     * Returns all files for a search as objects
+     *
+     * @param $aSearch
+     * @return array
+     */
     public function getFilesBySearch($aSearch)
     {
         $this->setSearchWord($aSearch);
@@ -56,18 +98,34 @@ class Files
 
         return $aResults;
     }
-	
+
+    /**
+     * Sets niederschriften filter
+     *
+     * @return bool
+     */
     public function isFilterNiederschriftenActive()
     {
         return $this->bFilterNiederschriften;
     }
 
+    /**
+     * Sets einladungen filter
+     *
+     * @return bool
+     */
     public function isFilterEinladungenActive()
     {
         return $this->bFilterEinladungen;
     }
 
-	protected function setSearchWord($aSearchWord)
+    /**
+     * Sets search word
+     *
+     * @param $aSearchWord
+     * @return bool
+     */
+    protected function setSearchWord($aSearchWord)
 	{
         $sSearchWord = $aSearchWord['s'];
 
@@ -78,28 +136,55 @@ class Files
 		return true;
 	}
 
-	public function getSearchWord()
+    /**
+     * Returns search word
+     *
+     * @return string
+     */
+    public function getSearchWord()
 	{
 		return utf8_encode($this->sSearchWord);
 	}
 
-	private function setFileId($iId)
+    /**
+     * Sets id for a file
+     *
+     * @param $iId
+     * @return bool
+     */
+    private function setFileId($iId)
 	{
 		$this->iFileId = filter_var($iId, FILTER_SANITIZE_NUMBER_INT);
 		
 		return true;
 	}
 
+    /**
+     * Sets dataset counter
+     *
+     * @param $iResultCount
+     */
     private function setResultCount($iResultCount)
     {
         $this->iResultCount = $iResultCount;
     }
 
-   	public function getResultCount()
+    /**
+     * Returns dataset counter
+     *
+     * @return int
+     */
+    public function getResultCount()
    	{
    		return $this->iResultCount;
    	}
 
+    /**
+     * returns a file object
+     *
+     * @param $aFile
+     * @return File
+     */
     private function getFileObject($aFile)
     {
         $oFile = new File();

@@ -5,35 +5,61 @@
  */
 class DB 
 {
-	var $sDatabase = 'stadtrat';
-	var $sUser = 'root';
-	var $sPassword = 'root';
-	var $sHost = 'localhost';
-	
-	private $sDbHandle = null;
-	
-	function __construct()
+    /**
+     * @var string  database name
+     */
+    var $sDatabase = 'stadtrat';
+    /**
+     * @var string  database user
+     */
+    var $sUser = 'root';
+    /**
+     * @var string  database password
+     */
+    var $sPassword = 'root';
+    /**
+     * @var string  database host
+     */
+    var $sHost = 'localhost';
+
+    /**
+     * @var null|resource   database handle
+     */
+    private $hDb = null;
+
+    /**
+     * Constructor
+     *
+     * @return \DB
+     */
+    function __construct()
 	{
-        if (is_resource($this->sDbHandle))
+        if (is_resource($this->hDb))
         {
             return true;
         }
 
 		// db connect
-		if (! $this->sDbHandle = mysql_connect($this->sHost, $this->sUser, $this->sPassword))
+		if (! $this->hDb = mysql_connect($this->sHost, $this->sUser, $this->sPassword))
 		{
 		    die('Verbindung schlug fehl: ' . mysql_error());
 		}
 		
-		if (! mysql_select_db($this->sDatabase, $this->sDbHandle))
+		if (! mysql_select_db($this->sDatabase, $this->hDb))
 		{
 		    die('Datenbank konnte nicht ausgewählt werden: ' . mysql_error());
 		}
 
         return true;
 	}
-	
-	function insertVorlage($aData)
+
+    /**
+     * Insert a vorlage to database
+     *
+     * @param $aData
+     * @return int  id for vorlage
+     */
+    function insertVorlage($aData)
 	{
 		$sSql = sprintf("INSERT INTO sr_vorlage (name, type, date, subject) VALUES ('%s', '%s', %u, '%s')",
 		    mysql_real_escape_string($aData['name']),
@@ -49,8 +75,14 @@ class DB
 		
 		return mysql_insert_id();
 	}
-	
-	function insertFile($aData)
+
+    /**
+     * Inserts file data to database
+     *
+     * @param $aData
+     * @return int  id for file
+     */
+    function insertFile($aData)
 	{
 		$sSql = sprintf("INSERT INTO sr_file (content, filename) VALUES ('%s', '%s')",
 		    mysql_real_escape_string($aData['content']),
@@ -64,8 +96,14 @@ class DB
 		
 		return mysql_insert_id();
 	}
-	
-	function fileExists($sFileName)
+
+    /**
+     * Checks if a file exists
+     *
+     * @param $sFileName
+     * @return bool
+     */
+    function fileExists($sFileName)
 	{
 		$sSql = sprintf("SELECT id FROM sr_file WHERE filename = '%s'", mysql_real_escape_string($sFileName));
 
@@ -83,8 +121,14 @@ class DB
 		
 		return $aData['id'];
 	}
-	
-	function vorlageExists($sVorlageName)
+
+    /**
+     * Checks if a vorlage exists
+     *
+     * @param $sVorlageName
+     * @return bool
+     */
+    function vorlageExists($sVorlageName)
 	{
 		$sSql = sprintf("SELECT id FROM sr_vorlage WHERE name = '%s'", mysql_real_escape_string($sVorlageName));
 
@@ -102,8 +146,15 @@ class DB
 		
 		return $aData['id'];
 	}
-	
-	function insertVorlageFileConnection($iVorlageId, $iFileId)
+
+    /**
+     * Inserts relation from file to vorlage
+     *
+     * @param $iVorlageId
+     * @param $iFileId
+     * @return int
+     */
+    function insertVorlageFileConnection($iVorlageId, $iFileId)
 	{
 		$sSql = sprintf("INSERT INTO sr_vorlage_file (vorlageid, fileid) VALUES (%u, %u)",
 		    $iVorlageId,
@@ -117,8 +168,16 @@ class DB
 		
 		return mysql_insert_id();
 	}
-	
-	function searchFilesContent($sSearchWord, $bFilterEinladungen, $bFilterNiederschriften)
+
+    /**
+     * Search in database for string
+     *
+     * @param $sSearchWord
+     * @param $bFilterEinladungen
+     * @param $bFilterNiederschriften
+     * @return array
+     */
+    function searchFilesContent($sSearchWord, $bFilterEinladungen, $bFilterNiederschriften)
 	{
 		$sSearchWord = preg_replace('/\s/', '%', $sSearchWord);
 		
@@ -151,7 +210,13 @@ class DB
 		return $aContent;
 	}
 
-	function searchFilesTitle($sSearchWord)
+    /**
+     * Search for string in file title
+     *
+     * @param $sSearchWord
+     * @return array
+     */
+    function searchFilesTitle($sSearchWord)
 	{
 		$sSql = sprintf("SELECT * FROM sr_file WHERE filename LIKE '%%%s%%'", $sSearchWord);
 		
@@ -168,8 +233,14 @@ class DB
 		
 		return $aContent;
 	}
-	
-	function getVorlagenForFile($iFileId)
+
+    /**
+     * Returns vorlage for file
+     *
+     * @param $iFileId
+     * @return array
+     */
+    function getVorlagenForFile($iFileId)
 	{
 		$sSql = sprintf("SELECT DISTINCT sr_vorlage.* FROM sr_vorlage INNER JOIN sr_vorlage_file ON (sr_vorlage.id = sr_vorlage_file.vorlageid) WHERE sr_vorlage_file.fileid = %u ORDER BY date DESC", $iFileId);
 		
@@ -186,8 +257,14 @@ class DB
 		
 		return $aContent;
 	}
-	
-	function getFileById($iFileId)
+
+    /**
+     * Returns file data for file id
+     *
+     * @param $iFileId
+     * @return array|bool
+     */
+    function getFileById($iFileId)
 	{
 		$sSql = sprintf("SELECT * FROM sr_file WHERE id = %u", $iFileId);
 		
@@ -204,6 +281,12 @@ class DB
 		return mysql_fetch_assoc($hRes);
 	}
 
+    /**
+     * Returns a vorlage by id
+     *
+     * @param $iVorlageId
+     * @return array|bool
+     */
     function getVorlageById($iVorlageId)
    	{
    		$sSql = sprintf("SELECT * FROM sr_vorlage WHERE id = %u", $iVorlageId);
@@ -221,6 +304,12 @@ class DB
    		return mysql_fetch_assoc($hRes);
    	}
 
+    /**
+     * Get file for vorlage
+     *
+     * @param $iVorlageId
+     * @return array
+     */
     function getFilesForVorlage($iVorlageId)
     {
         $sSql = sprintf("SELECT DISTINCT sr_file.* FROM sr_file INNER JOIN sr_vorlage_file ON (sr_file.id = sr_vorlage_file.fileid) WHERE sr_vorlage_file.vorlageid = %u", $iVorlageId);
@@ -239,6 +328,11 @@ class DB
         return $aContent;
     }
 
+    /**
+     * Returns database size as formated string
+     *
+     * @return string
+     */
     function getDatabaseSize()
     {
         $sSql = "SHOW TABLE STATUS";
@@ -260,6 +354,12 @@ class DB
         return $iSizeInMegabytes;
     }
 
+    /**
+     * Search for string in vorlagen
+     *
+     * @param $sSearchWord
+     * @return array
+     */
     function searchVorlagen($sSearchWord)
     {
         $sSearchWord = preg_replace('/\s{1,}/', '%', $sSearchWord);
