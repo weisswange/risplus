@@ -2,7 +2,7 @@
 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.vorlagen.php');
 
-class Index extends App
+class Index extends App implements Module
 {
     var $oDb = null;
     var $oSmarty = null;

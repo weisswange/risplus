@@ -1,19 +1,44 @@
 <?php
 
+/**
+ *  Represents a vorlage
+ */
 class Vorlage
 {
+    /**
+     * @var int     vorlage id
+     */
     private $iId = 0;
+    /**
+     * @var int     vorlage data
+     */
     private $iDate = 0;
+    /**
+     * @var string  vorlage name
+     */
     private $sName = '';
+    /**
+     * @var string  vorlage type
+     */
     private $sType = '';
+    /**
+     * @var string  vorlage subject
+     */
     private $sSubject = '';
 
+    /**
+     * Constructor
+     *
+     * @return bool
+     */
     public function _construct()
     {
         return true;
     }
 
     /**
+     * Sets date for vorlage
+     *
      * @param int $iDate
      */
     public function setDate($iDate)
@@ -22,6 +47,8 @@ class Vorlage
     }
 
     /**
+     * Returns date for vorlage
+     *
      * @return int
      */
     public function getDate()
@@ -30,6 +57,8 @@ class Vorlage
     }
 
     /**
+     * Sets vorlage id
+     *
      * @param int $iId
      */
     public function setId($iId)
@@ -38,6 +67,8 @@ class Vorlage
     }
 
     /**
+     * Returns vorlage id
+     *
      * @return int
      */
     public function getId()
@@ -46,6 +77,8 @@ class Vorlage
     }
 
     /**
+     * Sets vorlage name
+     *
      * @param string $sName
      */
     public function setName($sName)
@@ -54,6 +87,8 @@ class Vorlage
     }
 
     /**
+     * Returns vorlage name
+     *
      * @return string
      */
     public function getName()
@@ -62,6 +97,8 @@ class Vorlage
     }
 
     /**
+     * Sets vorlage subject
+     *
      * @param string $sSubject
      */
     public function setSubject($sSubject)
@@ -70,6 +107,8 @@ class Vorlage
     }
 
     /**
+     * Returns vorlage subject
+     *
      * @return string
      */
     public function getSubject()
@@ -78,6 +117,8 @@ class Vorlage
     }
 
     /**
+     * Sets vorlage type
+     *
      * @param string $sType
      */
     public function setType($sType)
@@ -86,6 +127,8 @@ class Vorlage
     }
 
     /**
+     * Returns vorlage type
+     *
      * @return string
      */
     public function getType()
