@@ -114,6 +114,27 @@ class Vorlagen
         return $this->getVorlageObject($aVorlage);
     }
 
+    public function getVorlagenByFileId($iId)
+    {
+        if (! $aResultsRaw = $this->oDb->getVorlagenForFile($iId))
+        {
+            throw new Exception('file id is not valid');
+        }
+        $aResults = array();
+
+        $iResultCount = 0;
+        foreach ($aResultsRaw as $aVorlage)
+        {
+            $aResults[] = $this->getVorlageObject($aVorlage);
+            $iResultCount++;
+        }
+
+        $this->setResultCount($iResultCount);
+
+        return $aResults;
+
+    }
+
     /**
      * Creates a vorlage object
      *

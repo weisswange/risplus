@@ -1,8 +1,5 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.modules.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.db.php');
-
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/smarty/Smarty.class.php');
 
 /**
@@ -75,7 +72,8 @@ class App
         // first page
         if ($sRoute == '' || $sRoute == '/')
         {
-            $sRoute = '/index/';
+            $this->oMod->setModule('index');
+            return true;
         }
 
         $aRoute = explode('/', $sRoute);

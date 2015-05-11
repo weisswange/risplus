@@ -193,7 +193,15 @@ class Files
         $oFile->setContent($aFile['content']);
         $oFile->setFilename($aFile['filename']);
         $oFile->setSize($aFile['filename']);
-        $oFile->setScore($aFile['score']);
+
+        if (isset($aFile['score']))
+        {
+            $oFile->setScore($aFile['score']);
+        }
+        else
+        {
+            $oFile->setScore(0);
+        }
 
         return $oFile;
     }

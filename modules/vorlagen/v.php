@@ -1,8 +1,5 @@
 <?php
 
-include_once('classes/class.vorlagen.php');
-include_once('classes/class.vorlage.php');
-
 class Vorlageview extends App implements Module
 {
     var $oDb = null;

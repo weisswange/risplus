@@ -24,7 +24,7 @@ class File
     /**
      * @var int     score for searchstring
      */
-    private $sScore = 0;
+    private $iScore = 0;
 
     /**
      * Constructor
@@ -135,9 +135,9 @@ class File
      *
      * @param $sScore
      */
-    public function setScore($sScore)
+    public function setScore($iScore)
     {
-        $this->sScore = round($sScore, 2);
+        $this->iScore = round($iScore, 2);
     }
 
     /**
@@ -147,6 +147,6 @@ class File
      */
     public function getScore()
     {
-        return $this->sScore;
+        return $this->iScore;
     }
 }

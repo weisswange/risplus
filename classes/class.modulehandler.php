@@ -134,6 +134,10 @@ class ModuleHandler
      */
     private function getModuleFilePath()
     {
+        if (! isset($this->aModuleConfiguration[$this->sModuleName]['file']))
+        {
+            return '';
+        }
         return $_SERVER['DOCUMENT_ROOT'] . '/' . MODULE_PATH . '/' . $this->getModule() . '/' . $this->aModuleConfiguration[$this->sModuleName]['file'];
     }
 
