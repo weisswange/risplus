@@ -1,8 +1,5 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.files.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/classes/class.file.php');
-
 class Dokumentview extends App implements Module
 {
     var $oDb = null;
@@ -39,7 +36,8 @@ class Dokumentview extends App implements Module
                 $oFiles = new Files();
                 $oFile = $oFiles->getFileById($this->iParameter);
 
-                $aVorlagen = $this->oDb->getVorlagenForFile($oFile->getId());
+                $oVorlagen = new Vorlagen();
+                $aVorlagen = $oVorlagen->getVorlagenByFileId($oFile->getId());
             }
             catch (Exception $e)
             {
