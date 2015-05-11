@@ -150,7 +150,6 @@ class ModuleHandler
     /**
      * Sets module content
      *
-     * @param $sContent
      * @return bool
      */
     public function setModuleContent()
@@ -167,5 +166,20 @@ class ModuleHandler
     public function getModuleContent()
     {
         return $this->sModuleContent;
+    }
+
+    /**
+     * Returns module title from configuration
+     *
+     * @return  string  module title
+     */
+    public function getModuleTitle()
+    {
+        if (isset($this->aModuleConfiguration[$this->sModuleName]['title']))
+        {
+            return $this->aModuleConfiguration[$this->sModuleName]['title'];
+        }
+
+        return '';
     }
 }

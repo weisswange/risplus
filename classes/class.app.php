@@ -20,7 +20,7 @@ class App
     private $iParameter = '';
 
     /**
-     * @var null    Smarty library object
+     * @var Smarty|null  Smarty library object
      */
     public $oSmarty = null;
 
@@ -154,6 +154,8 @@ class App
      */
     public function show()
     {
+        // collect variables
+        $this->oSmarty->assign('subtitle', $this->oMod->getModuleTitle());
         $this->oSmarty->display('frame.tpl');
         return true;
     }

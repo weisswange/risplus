@@ -119,15 +119,15 @@ class File
     /**
      * Creates filesize as formated string
      *
-     * @param $bytes
-     * @param int $decimals
+     * @param $iBytes
+     * @param int $iDecimals
      * @return string
      */
-    private function formatFilesize($bytes, $decimals = 2)
+    private function formatFilesize($iBytes, $iDecimals = 2)
    	{
-   		$sz = 'BKMGTP';
-   		$factor = floor((strlen($bytes) - 1) / 3);
-   		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
+   		$sAvailableUnits = 'BKMGTP';
+   		$iUnitFactor = (int) floor((strlen($iBytes) - 1) / 3);
+   		return sprintf("%.{$iDecimals}f", $iBytes / pow(1024, $iUnitFactor)) . @$sAvailableUnits[$iUnitFactor];
    	}
 
     /**
